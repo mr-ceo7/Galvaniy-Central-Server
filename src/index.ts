@@ -1,9 +1,25 @@
 import express from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(express.json());
+app.use(express.static(path.join(__dirname, '../public')));
+
+// Activity Log Buffer
+const activityLog: any[] = [];
+const logActivity = (type: string, message: string, data?: any) => {
+    const logItem = { timestamp: new Date(), type, message, data };
+    activityLog.push(logItem);
+    if (activityLog.length > 100) activityLog.shift();
+    io.emit('activity_log', logItem);
+    console.log(`[${type}] ${message}`);
+};
 
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
@@ -21,8 +37,13 @@ const devices = new Map<string, string>(); // deviceId -> socketId
 app.get('/status', (req, res) => {
     res.json({
         online_devices: devices.size,
-        devices: Array.from(devices.keys())
+        devices: Array.from(devices.keys()),
+        uptime: process.uptime()
     });
+});
+
+app.get('/api/activity', (req, res) => {
+    res.json(activityLog);
 });
 
 app.post('/prompt', async (req, res) => {
@@ -39,27 +60,30 @@ app.post('/prompt', async (req, res) => {
         return res.status(503).json({ status: "error", message: "No devices connected" });
     }
 
-    console.log(`Relaying prompt to device: ${prompt}`);
+    logActivity('PROMPT', `Relaying prompt to device: ${prompt}`, { deviceId });
 
     // Emit prompt to device and wait for response
     io.to(targetSocketId).timeout(60000).emit('new_prompt', { prompt }, (err: any, response: any) => {
         if (err) {
-            console.error("Relay timeout or error:", err);
+            logActivity('ERROR', "Relay timeout or error", { err });
             return res.status(504).json({ status: "error", message: "Device timed out" });
         }
-        res.json(response[0]); // Socket.io ack responses come as an array
+        const result = response[0];
+        logActivity('RESPONSE', 'Received response from device', { status: result.status });
+        res.json(result); // Socket.io ack responses come as an array
     });
 });
 
 io.on('connection', (socket) => {
-    console.log('New connection:', socket.id);
+    logActivity('SYSTEM', `New connection: ${socket.id}`);
 
     socket.on('register', (data) => {
         const { deviceId } = data;
         if (deviceId) {
             devices.set(deviceId, socket.id);
-            console.log(`Device registered: ${deviceId} (${socket.id})`);
+            logActivity('DEVICE', `Device registered: ${deviceId}`, { socketId: socket.id });
             socket.emit('registered', { status: 'success' });
+            io.emit('devices_updated', Array.from(devices.keys()));
         }
     });
 
@@ -68,7 +92,8 @@ io.on('connection', (socket) => {
         for (const [deviceId, socketId] of devices.entries()) {
             if (socketId === socket.id) {
                 devices.delete(deviceId);
-                console.log(`Device disconnected: ${deviceId}`);
+                logActivity('DEVICE', `Device disconnected: ${deviceId}`);
+                io.emit('devices_updated', Array.from(devices.keys()));
                 break;
             }
         }

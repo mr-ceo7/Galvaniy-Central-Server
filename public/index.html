@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galvaniy Relay | Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <div class="glow-bg"></div>
+    
+    <main class="dashboard">
+        <header class="header">
+            <div class="logo">
+                <span class="logo-icon">⚡</span>
+                <h1>Galvaniy <span>Relay</span></h1>
+            </div>
+            <div class="status-badge" id="server-status">
+                <span class="dot"></span> Online
+            </div>
+        </header>
+
+        <section class="stats-grid">
+            <div class="stat-card">
+                <h3>Connected Devices</h3>
+                <p id="device-count">0</p>
+                <div class="stat-icon">📱</div>
+            </div>
+            <div class="stat-card">
+                <h3>System Uptime</h3>
+                <p id="uptime">0s</p>
+                <div class="stat-icon">⏱️</div>
+            </div>
+        </section>
+
+        <div class="main-content">
+            <div class="left-panel">
+                <section class="card device-section">
+                    <h2>Connected Gateways</h2>
+                    <div id="device-grid" class="device-grid">
+                        <div class="no-devices">No devices connected</div>
+                    </div>
+                </section>
+
+                <section class="card chat-section">
+                    <h2>API Test Terminal</h2>
+                    <div id="chat-output" class="chat-output">
+                        <div class="chat-msg system">System: Ready to relay prompts...</div>
+                    </div>
+                    <form id="chat-form" class="chat-input-area">
+                        <select id="device-selector">
+                            <option value="">Auto Select</option>
+                        </select>
+                        <input type="text" id="prompt-input" placeholder="Ask Gemini..." autocomplete="off">
+                        <button type="submit">Send</button>
+                    </form>
+                </section>
+            </div>
+
+            <aside class="right-panel">
+                <section class="card logs-section">
+                    <h2>Live Activity Log</h2>
+                    <div id="log-container" class="log-container"></div>
+                </section>
+            </aside>
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
