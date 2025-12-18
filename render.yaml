@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: galvaniy-central-server
+    runtime: docker
+    plan: free # Can be changed to a higher tier if needed
+    region: oregon # or your preferred region
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: NODE_ENV
+        value: production
+    healthCheckPath: /status
