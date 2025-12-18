@@ -47,7 +47,11 @@ app.get('/api/activity', (req, res) => {
 });
 
 app.post('/prompt', async (req, res) => {
-    const { prompt, deviceId } = req.body;
+    const { prompt, deviceId, systemPrompt } = req.body;
+
+    // Default system prompt if none provided
+    const defaultSystem = "Respond ONLY with pure text even if it is code. Wrap your entire response in <RG> and </RG> tags. Example: prompt:'name the capital of France' Response:  <RG>{\"answer\": \"Paris\"}</RG>";
+    const finalSystem = systemPrompt || defaultSystem;
 
     if (!prompt) {
         return res.status(400).json({ status: "error", message: "Prompt is required" });
@@ -60,10 +64,10 @@ app.post('/prompt', async (req, res) => {
         return res.status(503).json({ status: "error", message: "No devices connected" });
     }
 
-    logActivity('PROMPT', `Relaying prompt to device: ${prompt}`, { deviceId });
+    logActivity('PROMPT', `Relaying prompt to device: ${prompt}`, { deviceId, hasSystem: !!systemPrompt });
 
     // Emit prompt to device and wait for response
-    io.to(targetSocketId).timeout(60000).emit('new_prompt', { prompt }, (err: any, response: any) => {
+    io.to(targetSocketId).timeout(60000).emit('new_prompt', { prompt, systemPrompt: finalSystem }, (err: any, response: any) => {
         if (err) {
             logActivity('ERROR', "Relay timeout or error", { err });
             return res.status(504).json({ status: "error", message: "Device timed out" });

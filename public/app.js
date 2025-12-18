@@ -94,6 +94,7 @@ chatForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const prompt = promptInput.value.trim();
     const deviceId = deviceSelector.value;
+    const isStrict = document.getElementById('strict-mode').checked;
 
     if (!prompt) return;
 
@@ -102,10 +103,17 @@ chatForm.addEventListener('submit', async (e) => {
     promptInput.disabled = true;
 
     try {
+        const body = { prompt, deviceId };
+        if (isStrict) {
+            body.systemPrompt = "Respond ONLY with a valid JSON object. Wrap your entire response in <RG> and </RG> tags. Example: <RG>{\"answer\": \"Paris\"}</RG>. Your response MUST be valid JSON.";
+        } else {
+            body.systemPrompt = "Respond naturally but try to be concise.";
+        }
+
         const res = await fetch('/prompt', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ prompt, deviceId })
+            body: JSON.stringify(body)
         });
         const data = await res.json();
 

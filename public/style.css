@@ -77,9 +77,17 @@ body {
 }
 
 @keyframes pulse {
-    0% { opacity: 0.5; }
-    50% { opacity: 1; }
-    100% { opacity: 0.5; }
+    0% {
+        opacity: 0.5;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.5;
+    }
 }
 
 .stats-grid {
@@ -145,18 +153,25 @@ body {
 }
 
 .device-item {
-    background: rgba(255,255,255,0.03);
+    background: rgba(255, 255, 255, 0.03);
     border: 1px solid var(--card-border);
     padding: 1rem;
     border-radius: 16px;
     text-align: center;
 }
 
-.device-item .icon { font-size: 2rem; margin-bottom: 0.5rem; }
-.device-item .id { font-size: 0.8rem; color: var(--text-secondary); }
+.device-item .icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.device-item .id {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
 
 .chat-output {
-    background: rgba(0,0,0,0.2);
+    background: rgba(0, 0, 0, 0.2);
     height: 300px;
     border-radius: 16px;
     padding: 1rem;
@@ -170,13 +185,40 @@ body {
     gap: 0.5rem;
 }
 
-.chat-msg.user { color: var(--accent-color); }
-.chat-msg.device { color: var(--success); }
-.chat-msg.system { color: var(--text-secondary); font-style: italic; }
+.chat-msg.user {
+    color: var(--accent-color);
+}
+
+.chat-msg.device {
+    color: var(--success);
+}
+
+.chat-msg.system {
+    color: var(--text-secondary);
+    font-style: italic;
+}
 
 .chat-input-area {
     display: flex;
+    flex-wrap: wrap;
     gap: 1rem;
+    align-items: center;
+}
+
+.toggle-area {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    background: var(--card-bg);
+    padding: 0.5rem 0.8rem;
+    border-radius: 12px;
+    border: 1px solid var(--card-border);
+}
+
+.toggle-area input {
+    cursor: pointer;
 }
 
 #device-selector {
@@ -215,7 +257,9 @@ button {
     transition: transform 0.2s;
 }
 
-button:hover { transform: translateY(-2px); }
+button:hover {
+    transform: translateY(-2px);
+}
 
 .log-container {
     height: 600px;
@@ -226,15 +270,20 @@ button:hover { transform: translateY(-2px); }
 }
 
 .log-item {
-    background: rgba(255,255,255,0.02);
+    background: rgba(255, 255, 255, 0.02);
     padding: 0.8rem;
     border-radius: 12px;
     border-left: 3px solid var(--accent-color);
     font-size: 0.8rem;
 }
 
-.log-item.ERROR { border-left-color: var(--error); }
-.log-item.DEVICE { border-left-color: var(--success); }
+.log-item.ERROR {
+    border-left-color: var(--error);
+}
+
+.log-item.DEVICE {
+    border-left-color: var(--success);
+}
 
 .log-meta {
     display: flex;
@@ -244,8 +293,12 @@ button:hover { transform: translateY(-2px); }
     font-size: 0.7rem;
 }
 
-.log-msg { font-weight: 400; }
+.log-msg {
+    font-weight: 400;
+}
 
 @media (max-width: 900px) {
-    .main-content { grid-template-columns: 1fr; }
+    .main-content {
+        grid-template-columns: 1fr;
+    }
 }

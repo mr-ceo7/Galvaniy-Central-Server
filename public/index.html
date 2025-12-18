@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,9 +9,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="/socket.io/socket.io.js"></script>
 </head>
+
 <body>
     <div class="glow-bg"></div>
-    
+
     <main class="dashboard">
         <header class="header">
             <div class="logo">
@@ -53,6 +55,10 @@
                         <select id="device-selector">
                             <option value="">Auto Select</option>
                         </select>
+                        <div class="toggle-area">
+                            <input type="checkbox" id="strict-mode" checked>
+                            <label for="strict-mode">Strict JSON Mode</label>
+                        </div>
                         <input type="text" id="prompt-input" placeholder="Ask Gemini..." autocomplete="off">
                         <button type="submit">Send</button>
                     </form>
@@ -70,4 +76,5 @@
 
     <script src="app.js"></script>
 </body>
+
 </html>
