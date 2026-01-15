@@ -13,7 +13,8 @@ const app = express();
 app.use((req, res, next) => {
     const allowedOrigins = [
         'https://exam-timetables-uonbi.vercel.app',
-        'http://localhost:3000'
+        'http://localhost:3000',
+        'https://galvaniy-labs.vercel.app'
     ];
     
     const origin = req.headers.origin;
