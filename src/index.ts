@@ -46,7 +46,7 @@ app.get('/api/activity', (req, res) => {
     res.json(activityLog);
 });
 
-app.post('/prompt', async (req, res) => {
+app.post('/api/generate', async (req, res) => {
     const { prompt, deviceId, systemPrompt } = req.body;
 
     // Default system prompt if none provided
