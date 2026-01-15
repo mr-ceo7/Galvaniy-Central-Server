@@ -95,7 +95,7 @@ app.post('/api/generate', async (req, res) => {
     logActivity('PROMPT', `Relaying prompt to device: ${prompt}`, { deviceId, hasSystem: !!systemPrompt });
 
     // Emit prompt to device and wait for response
-    io.to(targetSocketId).timeout(60000).emit('new_prompt', { prompt, systemPrompt: finalSystem }, (err: any, response: any) => {
+    io.to(targetSocketId).timeout(300000).emit('new_prompt', { prompt, systemPrompt: finalSystem }, (err: any, response: any) => {
         if (err) {
             logActivity('ERROR', "Relay timeout or error", { err });
             return res.status(504).json({ status: "error", message: "Device timed out" });
