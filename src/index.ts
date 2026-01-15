@@ -8,6 +8,20 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
+
+// CORS middleware
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', 'https://exam-timetables-uonbi.vercel.app');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    
+    if (req.method === 'OPTIONS') {
+        return res.sendStatus(200);
+    }
+    next();
+});
+
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../public')));
 
@@ -50,7 +64,7 @@ app.post('/api/generate', async (req, res) => {
     const { prompt, deviceId, systemPrompt } = req.body;
 
     // Default system prompt if none provided
-    const defaultSystem = "Respond ONLY with pure text even if it is code. Wrap your entire response in <RG> and </RG> tags. Example: prompt:'name the capital of France' Response:  <RG>{\"answer\": \"Paris\"}</RG>";
+    const defaultSystem = "Respond ONLY with pure text even if it is code.";
     const finalSystem = systemPrompt || defaultSystem;
 
     if (!prompt) {
