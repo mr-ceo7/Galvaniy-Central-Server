@@ -60,6 +60,10 @@ app.get('/api/activity', (req, res) => {
     res.json(activityLog);
 });
 
+app.post('/api/upload', (req, res) => {
+    res.json({ status: "ok" });
+});
+
 app.post('/api/generate', async (req, res) => {
     const { prompt, deviceId, systemPrompt } = req.body;
 
